@@ -48,20 +48,25 @@ int main()
 
 // ------------------------------------------------------------------------------------------------------- CASE 3 -------------------------------
 
-    // AdaptiveHuffmanTree adaptive;
-    // adaptive.readNextSymbol('B');
-    // adaptive.readNextSymbol('O');
-    // adaptive.readNextSymbol('O');
-    // adaptive.readNextSymbol('K');
-    // adaptive.readNextSymbol('K');
-    // adaptive.readNextSymbol('E');
-    // adaptive.readNextSymbol('E');
-    // adaptive.readNextSymbol('P');
-    // adaptive.readNextSymbol('E');
-    // adaptive.readNextSymbol('R');
-    // adaptive.print();
-    // std::cout << std::endl;
-    // std::cout << adaptive.encode() << std::endl;
+    AdaptiveHuffmanTree adaptive;
+    adaptive.readNextSymbol('B');
+    adaptive.readNextSymbol('O');
+    adaptive.readNextSymbol('O');
+    adaptive.readNextSymbol('K');
+    adaptive.readNextSymbol('K');
+    adaptive.readNextSymbol('E');
+    adaptive.readNextSymbol('E');
+    adaptive.readNextSymbol('P');
+    adaptive.readNextSymbol('E');
+    adaptive.readNextSymbol('R');
+    adaptive.print();
+    std::cout << std::endl;
+    std::string encodedTree = adaptive.encode();
+    std::cout << encodedTree << std::endl;
+
+    AdaptiveHuffmanTree adaptiveToDecode;
+    adaptiveToDecode.decode(encodedTree);
+    adaptiveToDecode.print();
 // ------------------------------------------------------------------------------------------------------- CASE 3 -------------------------------
 
 // ------------------------------------------------------------------------------------------------------- CASE 4 -------------------------------

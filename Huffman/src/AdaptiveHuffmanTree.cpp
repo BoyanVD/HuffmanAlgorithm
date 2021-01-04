@@ -198,14 +198,64 @@ std::string AdaptiveHuffmanTree::encode()  // encode with count property of node
     return res;
 }
 
+// PUT IN ANOTHER FILE CALLED HELPER FUNCTIONALITY--------START-------------------------
+unsigned readNextNumber(const std::string& str)
+{
+    unsigned res = 0;
+    unsigned index = 0;
+
+    while(str[index] >= '0' && str[index] <= '9' && index < str.length())
+    {
+        res += str[index] - '0';
+        res *= 10;
+        ++index;
+    }
+    res /= 10;
+
+    return res;
+}
+
+unsigned numLength(unsigned num)
+{
+    unsigned counter = 0;
+    while(num > 0)
+    {
+        ++counter;
+        num /= 10;
+    }
+
+    return counter;
+}
+//--------------------------------------------------------END----------------------------
+
 void AdaptiveHuffmanTree::decode(const std::string encoded)
 {
-    size_t index = 0;
+    // CLEAR THE THREE !!!!!
+
+    // Check if string starts with "NULL-Node0"
+    size_t index = ZERO_NODE_SYMBOL.length() + 1;
+    Node* leftNode = new Node(ZERO_NODE_SYMBOL, 0, nullptr, nullptr, nullptr);
+    if (index >= encoded.length())
+    {
+        this->root = leftNode;
+        return;
+    }
 
     while(index < encoded.size())
     {
-
+        std::string signature = "";
+        signature += encoded[index];
         ++index;
+        unsigned count = readNextNumber(encoded.substr(index));
+        index += numLength(count);
+
+        Node* rightNode = new Node(signature, count, nullptr, nullptr, nullptr);
+        Node* rootNode = new Node(ZERO_NODE_SYMBOL, (leftNode->count + rightNode->count), leftNode, rightNode, nullptr);
+        leftNode->parent = rootNode;
+        rightNode->parent = rootNode;
+
+        leftNode = rootNode;
+        this->root = rootNode;
     }
 }
 
