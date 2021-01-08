@@ -2,6 +2,7 @@
 #define __ADAPTIVE_HUFFMAN_TREE_CPP
 
 #include "AdaptiveHuffmanTree.h"
+#include <exception>
 
 AdaptiveHuffmanTree::AdaptiveHuffmanTree()
 {
@@ -191,7 +192,7 @@ void AdaptiveHuffmanTree::encodeHelper(Node* node, std::string& result)
     encodeHelper(node->right, result);
 }
 
-std::string AdaptiveHuffmanTree::encode()  // encode with count property of nodes
+std::string AdaptiveHuffmanTree::encodeTree()  // encode with count property of nodes
 {
     std::string res = "";
     encodeHelper(this->root, res);
@@ -228,7 +229,7 @@ unsigned numLength(unsigned num)
 }
 //--------------------------------------------------------END----------------------------
 
-void AdaptiveHuffmanTree::decode(const std::string encoded)
+void AdaptiveHuffmanTree::decodeTree(const std::string encoded)
 {
     // CLEAR THE THREE !!!!!
 
@@ -258,5 +259,73 @@ void AdaptiveHuffmanTree::decode(const std::string encoded)
         this->root = rootNode;
     }
 }
+
+
+
+// -------------------------------------------------- SAME FOR BOTH TREES START !!!!!!!!!!!!!!!!!!!!!!!!-----------------------------------------
+void AdaptiveHuffmanTree::getCodes(Node* curr, std::unordered_map<char, std::string>& table, std::string label) const
+{
+    if(isLeaf(curr)) // MAKE FUNCTION TO CHECK THAT CASE (bool isLeaf(Node)) !
+        table[curr->signature[0]] = label; // Think of validation
+    
+    if(curr->left != nullptr)
+        getCodes(curr->left, table, label + "0");
+    
+    if(curr->right != nullptr)
+        getCodes(curr->right, table, label + "1");
+}
+
+std::unordered_map<char, std::string> AdaptiveHuffmanTree::getEncodingTable() const
+{
+    std::unordered_map<char, std::string> table;
+
+    if (this->root->signature.size() == 1) // MAKE FUNCTION TO CHECK THAT CASE !
+        table[this->root->signature[0]] = "0";
+    else
+        this->getCodes(this->root, table, "");
+
+    return table;
+}
+
+std::string AdaptiveHuffmanTree::encodeText(const std::string& text) const
+{
+    std::string result = "";
+    std::unordered_map<char, std::string> table = this->getEncodingTable();
+
+    for(size_t i = 0; i < text.size(); ++i)
+        result += table[text[i]];
+
+    return result;
+}
+
+void AdaptiveHuffmanTree::decodeTextHelper(const std::string& text, Node* current, std::string& result) const
+{
+    if (AdaptiveHuffmanTree::isLeaf(current) && (text.size() > 0)) // FUNCTION TO CHECK CONDITION
+    {
+        result += current->signature;
+        decodeTextHelper(text, this->root, result);
+    }
+
+    if (AdaptiveHuffmanTree::isLeaf(current) && (text.size() == 0))
+    {
+        result += current->signature;
+        return;
+    }
+
+    if (text[0] == '1' && current->right != nullptr)
+        decodeTextHelper(text.substr(1), current->right, result);
+    else if (text[0] == '0' && current->left != nullptr)
+        decodeTextHelper(text.substr(1), current->left, result);    
+}
+
+std::string AdaptiveHuffmanTree::decodeText(const std::string& text) const
+{
+    std::string result = "";
+
+    this->decodeTextHelper(text, this->root, result);
+
+    return result;
+}
+// -------------------------------------------------- SAME FOR BOTH TREES END !!!!!!!!!!!!!!!!!!!!!!!!-----------------------------------------
 
 #endif

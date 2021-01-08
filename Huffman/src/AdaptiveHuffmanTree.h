@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 const std::string ZERO_NODE_SYMBOL = "NULL-Node";
 
@@ -31,21 +32,26 @@ private:
     Node* findNodeForSymbol(const std::string& signature, Node* current);
     Node* highestNumberedLeafOfWeight(unsigned weight, Node* current);
     Node* highestNumberedNodeOfWeight(unsigned weight, Node* current);
-    bool isLeaf(Node* node);
+    static bool isLeaf(Node* node); // Same for both trees.
     void getAllNodesNumbered(unsigned weight, Node* current, std::vector<Node*>& list);
     void swapNodes(Node* node1, Node* node2);
     void printHelper(Node* current);
 
-    // void encodeHelper(std::string code, Node* node, std::string& result);
-    void encodeHelper(Node* node, std::string& result);
+    void getCodes(Node* curr, std::unordered_map<char, std::string>& table, std::string label) const; // Same for both trees .
+    void decodeTextHelper(const std::string& text, Node* current, std::string& result) const; // Same for both trees.
+    void encodeHelper(Node* node, std::string& result); // Same for both trees.
 
 public:
     AdaptiveHuffmanTree();
 
     void readNextSymbol(char c);
     void print();
-    std::string encode();
-    void decode(const std::string encoded);
+    std::string encodeTree();
+    void decodeTree(const std::string encoded);
+
+    std::string encodeText(const std::string& text) const; // Same for both trees.
+    std::string decodeText(const std::string& text) const; // Same for both trees.
+    std::unordered_map<char, std::string> getEncodingTable() const; // Same for both trees . 
 };
 
 #endif

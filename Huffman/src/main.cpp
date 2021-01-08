@@ -1,6 +1,8 @@
 #include <iostream>
+
 #include "HuffmanTree.h"
 #include "AdaptiveHuffmanTree.h"
+#include "Core.h"
 
 // #include <unordered_map>
 
@@ -48,25 +50,25 @@ int main()
 
 // ------------------------------------------------------------------------------------------------------- CASE 3 -------------------------------
 
-    AdaptiveHuffmanTree adaptive;
-    adaptive.readNextSymbol('B');
-    adaptive.readNextSymbol('O');
-    adaptive.readNextSymbol('O');
-    adaptive.readNextSymbol('K');
-    adaptive.readNextSymbol('K');
-    adaptive.readNextSymbol('E');
-    adaptive.readNextSymbol('E');
-    adaptive.readNextSymbol('P');
-    adaptive.readNextSymbol('E');
-    adaptive.readNextSymbol('R');
-    adaptive.print();
-    std::cout << std::endl;
-    std::string encodedTree = adaptive.encode();
-    std::cout << encodedTree << std::endl;
+    // AdaptiveHuffmanTree adaptive;
+    // adaptive.readNextSymbol('B');
+    // adaptive.readNextSymbol('O');
+    // adaptive.readNextSymbol('O');
+    // adaptive.readNextSymbol('K');
+    // adaptive.readNextSymbol('K');
+    // adaptive.readNextSymbol('E');
+    // adaptive.readNextSymbol('E');
+    // adaptive.readNextSymbol('P');
+    // adaptive.readNextSymbol('E');
+    // adaptive.readNextSymbol('R');
+    // adaptive.print();
+    // std::cout << std::endl;
+    // std::string encodedTree = adaptive.encodeTree();
+    // std::cout << encodedTree << std::endl;
 
-    AdaptiveHuffmanTree adaptiveToDecode;
-    adaptiveToDecode.decode(encodedTree);
-    adaptiveToDecode.print();
+    // AdaptiveHuffmanTree adaptiveToDecode;
+    // adaptiveToDecode.decodeTree(encodedTree);
+    // adaptiveToDecode.print();
 // ------------------------------------------------------------------------------------------------------- CASE 3 -------------------------------
 
 // ------------------------------------------------------------------------------------------------------- CASE 4 -------------------------------
@@ -87,5 +89,9 @@ int main()
     // std::cout << decoded << std::endl;
 // ------------------------------------------------------------------------------------------------------- CASE 4 -------------------------------
 
+
+// ------------------------------------------------------------------------------------------------------- CASE 5 -------------------------------
+    Core::run();
+// ------------------------------------------------------------------------------------------------------- CASE 5 -------------------------------
     return 0;
 }

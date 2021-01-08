@@ -133,21 +133,6 @@ bool HuffmanTree::empty() const
 
 std::string HuffmanTree::encodeTree() // encode with count property of nodes instead of counting frequencies
 {
-    // frequency_queue frequencies = this->countFrequencies(this->originalString);
-    // std::string result = "";
-
-    // while(!frequencies.empty())
-    // {
-    //     Node* current = frequencies.top();
-    //     frequencies.pop();
-
-    //     std::string signature = "";
-    //     signature += (current->signature + std::to_string(current->count));
-    //     result += signature;
-    // }
-
-    // return result;
-
     std::string res = "";
     encodeHelper(this->root, res);
     return res;
