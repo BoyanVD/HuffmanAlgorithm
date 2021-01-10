@@ -3,6 +3,7 @@
 
 #include "AdaptiveHuffmanTree.h"
 #include <exception>
+#include "HelperFunctionality.h"
 
 AdaptiveHuffmanTree::AdaptiveHuffmanTree()
 {
@@ -10,12 +11,35 @@ AdaptiveHuffmanTree::AdaptiveHuffmanTree()
 
     this->root = node;
     this->zeroNode = node;
-    // this->zeroNodeCounter = 1;
+}
+
+AdaptiveHuffmanTree::~AdaptiveHuffmanTree()
+{
+    this->clear(this->root);
 }
 
 bool AdaptiveHuffmanTree::isLeaf(Node* node)
 {
     return node->left == nullptr && node->right == nullptr;
+}
+
+void AdaptiveHuffmanTree::clear(Node* current)
+{
+    if(current == nullptr)
+    {
+        return;
+    }
+
+    if(isLeaf(current))
+    {
+        delete current;
+        return;
+    }
+
+    clear(current->left);
+    clear(current->right);
+    
+    delete current;
 }
 
 AdaptiveHuffmanTree::Node* AdaptiveHuffmanTree::findNodeForSymbol(const std::string& signature, Node* current)
@@ -39,9 +63,6 @@ AdaptiveHuffmanTree::Node* AdaptiveHuffmanTree::findNodeForSymbol(const std::str
 
 void AdaptiveHuffmanTree::swapNodes(Node* node1, Node* node2)
 {
-    // Node* tmp = node1;
-    // node1 = node2;
-    // node2 = tmp;
     if(node1->parent->left == node1)
         node1->parent->left = node2;
     else if(node1->parent->right == node1)
@@ -119,8 +140,6 @@ void AdaptiveHuffmanTree::readNextSymbol(char c)
     if(nodeForSymbol == nullptr)
     {
         Node* newZeroNode = new Node(ZERO_NODE_SYMBOL, 0, nullptr, nullptr, this->zeroNode);
-        // Node* newZeroNode = new Node(ZERO_NODE_SYMBOL + " " + std::to_string(this->zeroNodeCounter), 0, nullptr, nullptr, this->zeroNode);
-        // this->zeroNodeCounter += 1;
         nodeForSymbol = new Node(signature, 1, nullptr, nullptr, this->zeroNode);
 
         this->zeroNode->left = newZeroNode;
@@ -180,7 +199,7 @@ void AdaptiveHuffmanTree::print()
     this->printHelper(this->root);
 }
 
-void AdaptiveHuffmanTree::encodeHelper(Node* node, std::string& result)
+void AdaptiveHuffmanTree::encodeTreeHelper(Node* node, std::string& result)
 {
     if(node == nullptr)
         return;
@@ -188,50 +207,50 @@ void AdaptiveHuffmanTree::encodeHelper(Node* node, std::string& result)
     if(isLeaf(node))
         result += (node->signature + std::to_string(node->count));
 
-    encodeHelper(node->left, result);
-    encodeHelper(node->right, result);
+    encodeTreeHelper(node->left, result);
+    encodeTreeHelper(node->right, result);
 }
 
 std::string AdaptiveHuffmanTree::encodeTree()  // encode with count property of nodes
 {
     std::string res = "";
-    encodeHelper(this->root, res);
+    encodeTreeHelper(this->root, res);
     return res;
 }
 
-// PUT IN ANOTHER FILE CALLED HELPER FUNCTIONALITY--------START-------------------------
-unsigned readNextNumber(const std::string& str)
-{
-    unsigned res = 0;
-    unsigned index = 0;
+// // PUT IN ANOTHER FILE CALLED HELPER FUNCTIONALITY--------START-------------------------
+// unsigned readNextNumber(const std::string& str)
+// {
+//     unsigned res = 0;
+//     unsigned index = 0;
 
-    while(str[index] >= '0' && str[index] <= '9' && index < str.length())
-    {
-        res += str[index] - '0';
-        res *= 10;
-        ++index;
-    }
-    res /= 10;
+//     while(str[index] >= '0' && str[index] <= '9' && index < str.length())
+//     {
+//         res += str[index] - '0';
+//         res *= 10;
+//         ++index;
+//     }
+//     res /= 10;
 
-    return res;
-}
+//     return res;
+// }
 
-unsigned numLength(unsigned num)
-{
-    unsigned counter = 0;
-    while(num > 0)
-    {
-        ++counter;
-        num /= 10;
-    }
+// unsigned numLength(unsigned num)
+// {
+//     unsigned counter = 0;
+//     while(num > 0)
+//     {
+//         ++counter;
+//         num /= 10;
+//     }
 
-    return counter;
-}
-//--------------------------------------------------------END----------------------------
+//     return counter;
+// }
+// //--------------------------------------------------------END----------------------------
 
 void AdaptiveHuffmanTree::decodeTree(const std::string encoded)
 {
-    // CLEAR THE THREE !!!!!
+    this->clear(this->root); //-------------------------------------------------------- NEW ----------------------------
 
     // Check if string starts with "NULL-Node0"
     size_t index = ZERO_NODE_SYMBOL.length() + 1;

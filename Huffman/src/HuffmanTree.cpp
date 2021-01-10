@@ -9,21 +9,33 @@ HuffmanTree::HuffmanTree(const std::string& str) : root(nullptr)
     this->buildTree(str);
 }
 
-void HuffmanTree::clear(Node*& startingNode)
+HuffmanTree::~HuffmanTree()
 {
-    if(startingNode == nullptr)
+    this->clear(this->root);
+}
+
+void HuffmanTree::clear(Node* current)
+{
+    if(current == nullptr)
+    {
         return;
+    }
+
+    if(isLeaf(current))
+    {
+        delete current;
+        return;
+    }
     
-    if(startingNode->left == nullptr && startingNode->right == nullptr)
-        delete startingNode;
-    
-    clear(startingNode->left);
-    clear(startingNode->right);
-    delete startingNode;
+    clear(current->left);
+    clear(current->right);
+
+    delete current;
 }
 
 void HuffmanTree::buildTree(const std::string& str)
 {
+    this->clear(this->root); //----------------------------------------- NEW -----------------------------------------
     frequency_queue frequencies = countFrequencies(str);
 
     while(frequencies.size() > 1)
@@ -71,29 +83,29 @@ HuffmanTree::frequency_queue HuffmanTree::countFrequencies(const std::string& st
     return result;
 }
 
-void HuffmanTree::print()
-{
-    helper(this->root);
-}
+// void HuffmanTree::print()
+// {
+//     helper(this->root);
+// }
 
-void HuffmanTree::helper(Node* curr)
-{
-    std::queue<Node*> res;
-    res.push(curr);
+// void HuffmanTree::helper(Node* curr)
+// {
+//     std::queue<Node*> res;
+//     res.push(curr);
 
-    while(!res.empty())
-    {
-        Node* c = res.front();
-        std::cout << " ( " << c->signature << " " << c->count << " ) ";
-        res.pop();
+//     while(!res.empty())
+//     {
+//         Node* c = res.front();
+//         std::cout << " ( " << c->signature << " " << c->count << " ) ";
+//         res.pop();
 
-        if(c->left != nullptr)
-            res.push(c->left);
+//         if(c->left != nullptr)
+//             res.push(c->left);
         
-        if(c->right != nullptr)
-            res.push(c->right);
-    }
-}
+//         if(c->right != nullptr)
+//             res.push(c->right);
+//     }
+// }
 
 
 
@@ -134,11 +146,11 @@ bool HuffmanTree::empty() const
 std::string HuffmanTree::encodeTree() // encode with count property of nodes instead of counting frequencies
 {
     std::string res = "";
-    encodeHelper(this->root, res);
+    encodeTreeHelper(this->root, res);
     return res;
 }
 
-void HuffmanTree::encodeHelper(Node* node, std::string& result)
+void HuffmanTree::encodeTreeHelper(Node* node, std::string& result)
 {
     if(node == nullptr)
         return;
@@ -146,8 +158,8 @@ void HuffmanTree::encodeHelper(Node* node, std::string& result)
     if(isLeaf(node))
         result += (node->signature + std::to_string(node->count));
 
-    encodeHelper(node->left, result);
-    encodeHelper(node->right, result);
+    encodeTreeHelper(node->left, result);
+    encodeTreeHelper(node->right, result);
 }
 
 HuffmanTree::frequency_queue HuffmanTree::countFrequenciesFromCode(const std::string& str) const
@@ -188,11 +200,8 @@ HuffmanTree::frequency_queue HuffmanTree::countFrequenciesFromCode(const std::st
 
 void HuffmanTree::decodeTree(const std::string& str)
 {
-    // this->clear()
+    this->clear(this->root); //----------------------------------------- NEW -----------------------------------------
 
-
-
-    // ----------------------------------------------------DUPLICATING CODE-------------------------------------------------
     frequency_queue frequencies = countFrequenciesFromCode(str);
 
     while(frequencies.size() > 1)
@@ -210,7 +219,6 @@ void HuffmanTree::decodeTree(const std::string& str)
     }
 
     this->root = frequencies.top();
-    // ----------------------------------------------------DUPLICATING CODE------------------------------------------------
 }
 
 std::string HuffmanTree::encodeText(const std::string& text) const
@@ -226,7 +234,7 @@ std::string HuffmanTree::encodeText(const std::string& text) const
 
 void HuffmanTree::decodeTextHelper(const std::string& text, Node* current, std::string& result) const
 {
-    if (HuffmanTree::isLeaf(current) && (text.size() > 0)) // FUNCTION TO CHECK CONDITION
+    if (HuffmanTree::isLeaf(current) && (text.size() > 0))
     {
         result += current->signature;
         decodeTextHelper(text, this->root, result);

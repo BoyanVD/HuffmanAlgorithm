@@ -1,4 +1,0 @@
-#ifndef __HUFFMAN_ALGORITHM_CPP
-#define __HUFFMAN_ALGORITHM_CPP
-
-#endif

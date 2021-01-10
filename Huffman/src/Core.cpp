@@ -4,29 +4,22 @@
 #include "Core.h"
 #include "HuffmanTree.h"
 #include "AdaptiveHuffmanTree.h"
+
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <cmath>
 
-
-/**
- * МНОГО ВАЖНООООООООООООООО !
- * ОБЕДИНИ ПЪРВИТЕ ДВА МЕТОДИТЕ ЗА КОДИРАНЕ И ДЕКОДИРАНЕ КАТО ОТ ФАЙЛА РАЗБЕРЕШ ДАЛИ Е АДАПТИВНО ИЛИ НЕ !!!!!!!!!!!!!!!!!!!!!!!!!!!
- */
-
-
 /**
  * Encoding in the following format :
  * <bool adaptive><std::string three><code>
  */
-void Core::encodeTxtFileContent(std::ostream& output, std::istream& input) // Think of command parameter
+void Core::encodeTxtFileContentStandard(std::ostream& output, std::istream& input)
 {
     std::stringstream stream;
     stream << input.rdbuf();
     std::string content = stream.str();
 
-    // std::cout << content << "\n";
     HuffmanTree tree(content);
     std::string encodedText = tree.encodeText(content);
     std::string encodedTree = tree.encodeTree();
@@ -36,9 +29,6 @@ void Core::encodeTxtFileContent(std::ostream& output, std::istream& input) // Th
     output << encodedText;
 }
 
-/**
- * 
- */
 void Core::encodeTxtFileContentAdaptive(std::ostream& output, std::istream& input)
 {
     AdaptiveHuffmanTree tree;
@@ -59,38 +49,54 @@ void Core::encodeTxtFileContentAdaptive(std::ostream& output, std::istream& inpu
 
 }
 
-void Core::decodeTxtFileContent(std::ostream& output, std::istream& input)
+void Core::encodeTxtFileContent(const Command& c)
 {
-    std::string isAdaptive;
-    std::string encodedText;
-    std::string encodedTree;
+    std::ifstream inputFile;
+    inputFile.open(c.getInputFile());
+    std::ofstream outputFile(c.getOutputFile());
 
-    getline(input, isAdaptive);
-    getline(input, encodedTree);
-    getline(input, encodedText);
+    if(c.isAdaptiveMode())
+        encodeTxtFileContentAdaptive(outputFile, inputFile);
+    else 
+        encodeTxtFileContentStandard(outputFile, inputFile);
+}
 
+std::string Core::decodeTxtFileContentStandard(const std::string& encodedText, const std::string& encodedTree)
+{
     HuffmanTree decodedTree;
     decodedTree.decodeTree(encodedTree);
     std::string decodedText = decodedTree.decodeText(encodedText);
 
-    output << decodedText;
+    return decodedText;
 }
 
-void Core::decodeTxtFileContentAdaptive(std::ostream& output, std::istream& input)
+std::string Core::decodeTxtFileContentAdaptive(const std::string& encodedText, const std::string& encodedTree)
 {
-    std::string isAdaptive;
-    std::string encodedText;
-    std::string encodedTree;
-
-    getline(input, isAdaptive);
-    getline(input, encodedTree);
-    getline(input, encodedText);
-
     AdaptiveHuffmanTree decodedTree;
     decodedTree.decodeTree(encodedTree);
     std::string decodedText = decodedTree.decodeText(encodedText);
 
-    output << decodedText;
+    return decodedText;
+}
+
+void Core::decodeTxtFileContent(const Command& c)
+{
+    std::ifstream inputFile;
+    inputFile.open(c.getInputFile());
+    std::ofstream outputFile(c.getOutputFile());
+
+    std::string isAdaptive;
+    std::string encodedText;
+    std::string encodedTree;
+
+    getline(inputFile, isAdaptive);
+    getline(inputFile, encodedTree);
+    getline(inputFile, encodedText);
+
+    if (isAdaptive.compare("0") == 0)
+        outputFile << decodeTxtFileContentStandard(encodedText, encodedTree);
+    else
+        outputFile << decodeTxtFileContentAdaptive(encodedText, encodedTree);
 }
 
 unsigned Core::binaryStringToNum(const std::string& str)
@@ -141,6 +147,36 @@ void Core::debugMode(std::istream& input)
     std::cout << std::endl;
 }
 
+void Core::compressionLevel(const Command& c)
+{
+    // std::cout << "KUR : " << c.getInputFile() << " " << c.getOutputFile() << std::endl;
+    std::ifstream originalFile(c.getInputFile());
+    std::ifstream compressedFile(c.getOutputFile());
+
+    std::stringstream stream;
+    stream << originalFile.rdbuf();
+    std::string originalText = stream.str();
+
+    std::string isAdaptive;
+    std::string encodedText;
+    std::string encodedTree;
+
+    getline(compressedFile, isAdaptive);
+    getline(compressedFile, encodedTree);
+    getline(compressedFile, encodedText);
+
+    unsigned originalSize = originalText.length() * 8;
+    unsigned encodedSize = encodedText.length() + (8 - (encodedText.length() % 8));
+    unsigned encodedTreeSize = encodedTree.length() * 8;
+    std::string encryptionMethod = (isAdaptive.compare("1") == 0) ? "Adaptive Huffman Encoding" : "Standard Huffman Encoding";
+
+    std::cout << std::endl << "--- Compression info ---" << std::endl 
+            << "Original file size in bits : " << originalSize << std::endl
+            << "Compressed file size in bits : " << encodedSize << std::endl
+            << "Encryption method : " << encryptionMethod << std::endl
+            << "Encoded Tree Size : " << encodedTreeSize << std::endl << std::endl;
+}
+
 void Core::run()
 {
     // std::ifstream inFile;
@@ -167,6 +203,38 @@ void Core::run()
     // in.open("../files/demoOutput.txt");
     // std::ofstream out("../files/shit.txt");
     // Core::decodeTxtFileContentAdaptive(out, in);
+
+    // AdaptiveHuffmanTree adaptive;
+    // adaptive.readNextSymbol('B');
+    // adaptive.readNextSymbol('O');
+    // adaptive.readNextSymbol('O');
+    // adaptive.readNextSymbol('K');
+    // adaptive.readNextSymbol('K');
+    // adaptive.readNextSymbol('E');
+    // adaptive.readNextSymbol('E');
+    // adaptive.readNextSymbol('P');
+    // adaptive.readNextSymbol('E');
+    // adaptive.readNextSymbol('R');
+
+
+    // NEW TEST __-----------------------------------------------------------------
+    std::string input = "";
+    getline(std::cin, input);
+
+    while(input.compare("exit") != 0)
+    {
+        Command c(input);
+
+        if(c.getMode().compare("compress") == 0)
+            encodeTxtFileContent(c);
+        else if (c.getMode().compare("decompress") == 0)
+            decodeTxtFileContent(c);
+        else if (c.isInfoMode())
+            compressionLevel(c);
+
+        input = "";
+        getline(std::cin, input);
+    }
 }
 
 #endif

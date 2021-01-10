@@ -44,6 +44,8 @@
         "xmemory": "c",
         "xtr1common": "c",
         "xutility": "c",
-        "FGK.C": "cpp"
+        "FGK.C": "cpp",
+        "fstream": "c",
+        "sstream": "c"
     }
 }

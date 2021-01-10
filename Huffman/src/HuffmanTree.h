@@ -44,18 +44,18 @@ private:
     frequency_queue countFrequencies(const std::string& str) const;
     frequency_queue countFrequenciesFromCode(const std::string& str) const;
 
-    void helper(Node* curr);// helper
-    void clear(Node*& startingNode);
+    // void helper(Node* curr);// helper
+    void clear(Node* current);
     static bool isLeaf(Node* node);
 
     void getCodes(Node* curr, std::unordered_map<char, std::string>& table, std::string label) const;
     void decodeTextHelper(const std::string& text, Node* current, std::string& result) const;
-    void encodeHelper(Node* node, std::string& result);
+    void encodeTreeHelper(Node* node, std::string& result);
 
 public:
     HuffmanTree() : root(nullptr) {}
     HuffmanTree(const std::string& str);
-    // ~HuffmanTree();
+    ~HuffmanTree();
     
     void buildTree(const std::string& str);
     bool empty() const;
@@ -67,7 +67,7 @@ public:
     std::string decodeText(const std::string& text) const; // Same for both trees
     std::unordered_map<char, std::string> getEncodingTable() const; // Same for both trees
 
-    void print();// helper
+    // void print();// helper
 };
 
 #endif

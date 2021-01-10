@@ -29,6 +29,7 @@ private:
     // unsigned zeroNodeCounter;
     std::string buildedString;
 
+    void clear(Node* current);
     Node* findNodeForSymbol(const std::string& signature, Node* current);
     Node* highestNumberedLeafOfWeight(unsigned weight, Node* current);
     Node* highestNumberedNodeOfWeight(unsigned weight, Node* current);
@@ -39,10 +40,11 @@ private:
 
     void getCodes(Node* curr, std::unordered_map<char, std::string>& table, std::string label) const; // Same for both trees .
     void decodeTextHelper(const std::string& text, Node* current, std::string& result) const; // Same for both trees.
-    void encodeHelper(Node* node, std::string& result); // Same for both trees.
+    void encodeTreeHelper(Node* node, std::string& result); // Same for both trees.
 
 public:
     AdaptiveHuffmanTree();
+    ~AdaptiveHuffmanTree();
 
     void readNextSymbol(char c);
     void print();
