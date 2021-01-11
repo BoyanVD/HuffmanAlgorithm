@@ -15,7 +15,7 @@ const std::string COMPRESSION_INFO_MODE_SIGNATURE = "-info";
 class Command
 {
 private:
-    std::string mode; // compress / decompress
+    std::string mode;
     std::string inputFile;
     std::string outputFile;
     bool isDebug;
@@ -24,7 +24,7 @@ private:
 
     std::string getPropertyFromInput(const std::string& input, const std::string& propertySignature);
     void parseInput(const std::string& input);
-    bool isCommandValid(const std::string& input);
+
 public:
     Command(const std::string& input);
     std::string getMode() const;
@@ -33,7 +33,7 @@ public:
     bool isAdaptiveMode() const;
     bool isInfoMode() const;
 
-    void printCommand(); // helper
+    void printCommand();
 };
 
 #endif

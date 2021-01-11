@@ -12,7 +12,9 @@
 
 /**
  * Encoding in the following format :
- * <bool adaptive><std::string three><code>
+ * <bool adaptive>
+ * <std::string three>
+ * <std::string code>
  */
 void Core::encodeTxtFileContentStandard(std::ostream& output, std::istream& input)
 {
@@ -149,7 +151,6 @@ void Core::debugMode(std::istream& input)
 
 void Core::compressionLevel(const Command& c)
 {
-    // std::cout << "KUR : " << c.getInputFile() << " " << c.getOutputFile() << std::endl;
     std::ifstream originalFile(c.getInputFile());
     std::ifstream compressedFile(c.getOutputFile());
 
@@ -174,50 +175,12 @@ void Core::compressionLevel(const Command& c)
             << "Original file size in bits : " << originalSize << std::endl
             << "Compressed file size in bits : " << encodedSize << std::endl
             << "Encryption method : " << encryptionMethod << std::endl
-            << "Encoded Tree Size : " << encodedTreeSize << std::endl << std::endl;
+            << "Encoded Tree Size : " << encodedTreeSize << std::endl << std::endl
+            << "Compression level : " << (double) encodedSize / (double) originalSize << std::endl;
 }
 
 void Core::run()
 {
-    // std::ifstream inFile;
-    // inFile.open("../files/demoInput.txt"); //open the input file
-    // std::ofstream outFile("../files/demoOutput.txt");
-    // Core::encodeTxtFileContent(outFile, inFile);
-
-    // std::ifstream in;
-    // in.open("../files/demoOutput.txt");
-    // std::ofstream out("../files/shit.txt");
-    // Core::decodeTxtFileContent(out, in);
-
-    // std::ifstream inDebug;
-    // inDebug.open("../files/demoInput.txt");
-    // Core::debugMode(inDebug);
-
-    // -----------------------------------Adaptive tests---------------------------------
-    // std::ifstream inFile;
-    // inFile.open("../files/demoInput.txt"); //open the input file
-    // std::ofstream outFile("../files/demoOutput.txt");
-    // Core::encodeTxtFileContentAdaptive(outFile, inFile);
-
-    // std::ifstream in;
-    // in.open("../files/demoOutput.txt");
-    // std::ofstream out("../files/shit.txt");
-    // Core::decodeTxtFileContentAdaptive(out, in);
-
-    // AdaptiveHuffmanTree adaptive;
-    // adaptive.readNextSymbol('B');
-    // adaptive.readNextSymbol('O');
-    // adaptive.readNextSymbol('O');
-    // adaptive.readNextSymbol('K');
-    // adaptive.readNextSymbol('K');
-    // adaptive.readNextSymbol('E');
-    // adaptive.readNextSymbol('E');
-    // adaptive.readNextSymbol('P');
-    // adaptive.readNextSymbol('E');
-    // adaptive.readNextSymbol('R');
-
-
-    // NEW TEST __-----------------------------------------------------------------
     std::string input = "";
     getline(std::cin, input);
 

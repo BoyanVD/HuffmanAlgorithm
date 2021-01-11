@@ -35,7 +35,7 @@ void HuffmanTree::clear(Node* current)
 
 void HuffmanTree::buildTree(const std::string& str)
 {
-    this->clear(this->root); //----------------------------------------- NEW -----------------------------------------
+    this->clear(this->root);
     frequency_queue frequencies = countFrequencies(str);
 
     while(frequencies.size() > 1)
@@ -83,36 +83,10 @@ HuffmanTree::frequency_queue HuffmanTree::countFrequencies(const std::string& st
     return result;
 }
 
-// void HuffmanTree::print()
-// {
-//     helper(this->root);
-// }
-
-// void HuffmanTree::helper(Node* curr)
-// {
-//     std::queue<Node*> res;
-//     res.push(curr);
-
-//     while(!res.empty())
-//     {
-//         Node* c = res.front();
-//         std::cout << " ( " << c->signature << " " << c->count << " ) ";
-//         res.pop();
-
-//         if(c->left != nullptr)
-//             res.push(c->left);
-        
-//         if(c->right != nullptr)
-//             res.push(c->right);
-//     }
-// }
-
-
-
 void HuffmanTree::getCodes(Node* curr, std::unordered_map<char, std::string>& table, std::string label) const
 {
-    if(HuffmanTree::isLeaf(curr)) // MAKE FUNCTION TO CHECK THAT CASE (bool isLeaf(Node)) !
-        table[curr->signature[0]] = label; // Think of validation
+    if(HuffmanTree::isLeaf(curr))
+        table[curr->signature[0]] = label;
     
     if(curr->left != nullptr)
         getCodes(curr->left, table, label + "0");
@@ -125,7 +99,7 @@ std::unordered_map<char, std::string> HuffmanTree::getEncodingTable() const
 {
     std::unordered_map<char, std::string> table;
 
-    if (this->root->signature.size() == 1) // MAKE FUNCTION TO CHECK THAT CASE !
+    if (this->root->signature.size() == 1)
         table[this->root->signature[0]] = "0";
     else
         this->getCodes(this->root, table, "");
@@ -143,14 +117,14 @@ bool HuffmanTree::empty() const
     return this->root == nullptr;
 }
 
-std::string HuffmanTree::encodeTree() // encode with count property of nodes instead of counting frequencies
+std::string HuffmanTree::encodeTree() const
 {
     std::string res = "";
     encodeTreeHelper(this->root, res);
     return res;
 }
 
-void HuffmanTree::encodeTreeHelper(Node* node, std::string& result)
+void HuffmanTree::encodeTreeHelper(Node* node, std::string& result) const
 {
     if(node == nullptr)
         return;
@@ -200,7 +174,7 @@ HuffmanTree::frequency_queue HuffmanTree::countFrequenciesFromCode(const std::st
 
 void HuffmanTree::decodeTree(const std::string& str)
 {
-    this->clear(this->root); //----------------------------------------- NEW -----------------------------------------
+    this->clear(this->root);
 
     frequency_queue frequencies = countFrequenciesFromCode(str);
 

@@ -11,7 +11,7 @@ int main()
      * -d -i demo/adaptive_e.txt -o demo/adaptive_d.txt
      * exit
      */
-    
+
     Core::run();
 
     return 0;

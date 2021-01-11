@@ -78,7 +78,7 @@ void AdaptiveHuffmanTree::swapNodes(Node* node1, Node* node2)
     node2->parent = tempParent;
 }
 
-void AdaptiveHuffmanTree::getAllNodesNumbered(unsigned weight, Node* current, std::vector<Node*>& list)
+void AdaptiveHuffmanTree::getAllLeafsNumbered(unsigned weight, Node* current, std::vector<Node*>& list)
 {
     if(current == nullptr)
     {
@@ -91,15 +91,14 @@ void AdaptiveHuffmanTree::getAllNodesNumbered(unsigned weight, Node* current, st
         return;
     }
 
-    getAllNodesNumbered(weight, current->left, list);
-    getAllNodesNumbered(weight, current->right, list);
+    getAllLeafsNumbered(weight, current->left, list);
+    getAllLeafsNumbered(weight, current->right, list);
 }
 
 AdaptiveHuffmanTree::Node* AdaptiveHuffmanTree::highestNumberedLeafOfWeight(unsigned weight, Node* current)
 {
-    // get all leafs of weight in vector where on index 0 stays the left most leaf and we will take the last element
     std::vector<Node*> leafsOfWeight;
-    getAllNodesNumbered(weight, current, leafsOfWeight);
+    getAllLeafsNumbered(weight, current, leafsOfWeight);
     return leafsOfWeight[leafsOfWeight.size() - 1];
 }
 
@@ -122,16 +121,6 @@ AdaptiveHuffmanTree::Node* AdaptiveHuffmanTree::highestNumberedNodeOfWeight(unsi
 
 void AdaptiveHuffmanTree::readNextSymbol(char c)
 {
-    // p = pointer to symbol’s node;
-    
-    // if ( p == NULL ){  /*  a new symbol!  */
-    //     Create two leaf children of the 0-node,
-    //       such that the right child is the new
-    //         symbol node and the left child is
-    //         the new 0-node;
-    //     p = parent of the new symbol node;
-    // }
-
     std::string signature = "";
     signature += c;
 
@@ -149,14 +138,6 @@ void AdaptiveHuffmanTree::readNextSymbol(char c)
         this->zeroNode = newZeroNode;
     }
 
-    // /*  if the two nodes are siblings.  */
-    // if ( p’s parent == 0-node’s parent ){
-    //     Swap p in the tree with the highest
-    //       numbered “leaf” of equal weight;
-    //     p’s weight = p’s weight + 1;
-    //     p = parent of p;
-    // }
-
     if (nodeForSymbol->parent == this->zeroNode->parent)
     {
         Node* highestNumberedLeaf = this->highestNumberedLeafOfWeight(nodeForSymbol->count, nodeForSymbol);
@@ -164,13 +145,6 @@ void AdaptiveHuffmanTree::readNextSymbol(char c)
         nodeForSymbol->count += 1;
         nodeForSymbol = nodeForSymbol->parent;
     }
-
-    // while ( p != root of the tree ){
-    //     Swap p in the tree with the highest
-    //       numbered “node” of equal weight;
-    //     p’s weight = p’s weight + 1;
-    //     p = parent of p;
-    // }
 
     while(nodeForSymbol != this->root)
     {
@@ -218,41 +192,10 @@ std::string AdaptiveHuffmanTree::encodeTree()  // encode with count property of 
     return res;
 }
 
-// // PUT IN ANOTHER FILE CALLED HELPER FUNCTIONALITY--------START-------------------------
-// unsigned readNextNumber(const std::string& str)
-// {
-//     unsigned res = 0;
-//     unsigned index = 0;
-
-//     while(str[index] >= '0' && str[index] <= '9' && index < str.length())
-//     {
-//         res += str[index] - '0';
-//         res *= 10;
-//         ++index;
-//     }
-//     res /= 10;
-
-//     return res;
-// }
-
-// unsigned numLength(unsigned num)
-// {
-//     unsigned counter = 0;
-//     while(num > 0)
-//     {
-//         ++counter;
-//         num /= 10;
-//     }
-
-//     return counter;
-// }
-// //--------------------------------------------------------END----------------------------
-
 void AdaptiveHuffmanTree::decodeTree(const std::string encoded)
 {
-    this->clear(this->root); //-------------------------------------------------------- NEW ----------------------------
+    this->clear(this->root);
 
-    // Check if string starts with "NULL-Node0"
     size_t index = ZERO_NODE_SYMBOL.length() + 1;
     Node* leftNode = new Node(ZERO_NODE_SYMBOL, 0, nullptr, nullptr, nullptr);
     if (index >= encoded.length())
@@ -279,13 +222,10 @@ void AdaptiveHuffmanTree::decodeTree(const std::string encoded)
     }
 }
 
-
-
-// -------------------------------------------------- SAME FOR BOTH TREES START !!!!!!!!!!!!!!!!!!!!!!!!-----------------------------------------
 void AdaptiveHuffmanTree::getCodes(Node* curr, std::unordered_map<char, std::string>& table, std::string label) const
 {
-    if(isLeaf(curr)) // MAKE FUNCTION TO CHECK THAT CASE (bool isLeaf(Node)) !
-        table[curr->signature[0]] = label; // Think of validation
+    if(isLeaf(curr))
+        table[curr->signature[0]] = label;
     
     if(curr->left != nullptr)
         getCodes(curr->left, table, label + "0");
@@ -298,7 +238,7 @@ std::unordered_map<char, std::string> AdaptiveHuffmanTree::getEncodingTable() co
 {
     std::unordered_map<char, std::string> table;
 
-    if (this->root->signature.size() == 1) // MAKE FUNCTION TO CHECK THAT CASE !
+    if (this->root->signature.size() == 1)
         table[this->root->signature[0]] = "0";
     else
         this->getCodes(this->root, table, "");
@@ -319,7 +259,7 @@ std::string AdaptiveHuffmanTree::encodeText(const std::string& text) const
 
 void AdaptiveHuffmanTree::decodeTextHelper(const std::string& text, Node* current, std::string& result) const
 {
-    if (AdaptiveHuffmanTree::isLeaf(current) && (text.size() > 0)) // FUNCTION TO CHECK CONDITION
+    if (AdaptiveHuffmanTree::isLeaf(current) && (text.size() > 0))
     {
         result += current->signature;
         decodeTextHelper(text, this->root, result);
@@ -345,6 +285,5 @@ std::string AdaptiveHuffmanTree::decodeText(const std::string& text) const
 
     return result;
 }
-// -------------------------------------------------- SAME FOR BOTH TREES END !!!!!!!!!!!!!!!!!!!!!!!!-----------------------------------------
 
 #endif

@@ -8,11 +8,6 @@ Command::Command(const std::string& input)
     this->parseInput(input);
 }
 
-bool Command::isCommandValid(const std::string& input)
-{
-    return (!((input.find(COMPRESS_MODE_SIGNATURE) == std::string::npos) && (input.find(DECOMPRESS_MODE_SIGNATURE) == std::string::npos)));
-}
-
 std::string Command::getPropertyFromInput(const std::string& input, const std::string& propertySignature)
 {
     size_t index = input.find(propertySignature) + propertySignature.length();

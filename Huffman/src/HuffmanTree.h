@@ -6,10 +6,6 @@
 #include <queue>
 #include <unordered_map>
 
-// IMPORTANT !!!!!!!
-// DESTRUCTOR AND CLEAR FUNCTION
-
-// WHEN ENCODING KEEP CODES IN HASH_MAP AND WHEN LOOKING FOR CODE FOR CHARACTER, FIRST CHECK IN THE HASH_MAP
 class HuffmanTree
 {
 private:
@@ -44,13 +40,12 @@ private:
     frequency_queue countFrequencies(const std::string& str) const;
     frequency_queue countFrequenciesFromCode(const std::string& str) const;
 
-    // void helper(Node* curr);// helper
     void clear(Node* current);
     static bool isLeaf(Node* node);
 
     void getCodes(Node* curr, std::unordered_map<char, std::string>& table, std::string label) const;
     void decodeTextHelper(const std::string& text, Node* current, std::string& result) const;
-    void encodeTreeHelper(Node* node, std::string& result);
+    void encodeTreeHelper(Node* node, std::string& result) const;
 
 public:
     HuffmanTree() : root(nullptr) {}
@@ -60,14 +55,12 @@ public:
     void buildTree(const std::string& str);
     bool empty() const;
 
-    std::string encodeTree(); // const    
+    std::string encodeTree() const;    
     void decodeTree(const std::string& str);
 
-    std::string encodeText(const std::string& text) const; // Same for both trees
-    std::string decodeText(const std::string& text) const; // Same for both trees
-    std::unordered_map<char, std::string> getEncodingTable() const; // Same for both trees
-
-    // void print();// helper
+    std::string encodeText(const std::string& text) const;
+    std::string decodeText(const std::string& text) const;
+    std::unordered_map<char, std::string> getEncodingTable() const;
 };
 
 #endif
