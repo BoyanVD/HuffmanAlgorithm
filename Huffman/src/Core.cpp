@@ -175,8 +175,8 @@ void Core::compressionLevel(const Command& c)
             << "Original file size in bits : " << originalSize << std::endl
             << "Compressed file size in bits : " << encodedSize << std::endl
             << "Encryption method : " << encryptionMethod << std::endl
-            << "Encoded Tree Size : " << encodedTreeSize << std::endl << std::endl
-            << "Compression level : " << (double) encodedSize / (double) originalSize << std::endl;
+            << "Encoded Tree Size : " << encodedTreeSize << std::endl
+            << "Compression level : " << (double) encodedSize / (double) originalSize << std::endl << std::endl;
 }
 
 void Core::run()
